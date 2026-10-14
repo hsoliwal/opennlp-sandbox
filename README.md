@@ -53,8 +53,8 @@ You can also follow our [mailing lists](http://opennlp.apache.org/mailing-lists.
 
 Currently, the library has different components:
 
-* `caseeditor-corpus-server-plugin`: A set of Java classes for [Apache UIMA](https://uima.apache.org) as Eclipse plugin to integrate corpora.
-* `caseeditor-opennlp-plugin`: An OpenNLP plugin for [Apache UIMA](https://uima.apache.org).
+* `caseditor-corpus-server-plugin`: A set of Java classes for [Apache UIMA](https://uima.apache.org) as Eclipse plugin to integrate corpora.
+* `caseditor-opennlp-plugin`: An OpenNLP plugin for [Apache UIMA](https://uima.apache.org).
 * `corpus-server`: A multi-module component to create, search, remove, and serve multiple corpora.
 * `mallet-addon`: An addon for [Mallet](https://mimno.github.io/Mallet/topics.html) targeting topic modelling techniques.
 * `modelbuilder-addon`: A set of classes to build models.
@@ -69,31 +69,24 @@ Currently, the library has different components:
 
 ## Getting Started
 
-You can import the core toolkit directly from Maven, SBT or Gradle after you have build it locally:
+The root `opennlp-sandbox` artifact is a Maven parent/aggregator with `pom`
+packaging, not a runtime JAR. Select a concrete component and inspect its own
+POM, sources, tests, and any README before choosing dependencies or launch
+commands. Installing the root project locally does not create a single
+executable sandbox application.
 
-#### Maven
+The [root reactor](pom.xml) includes `opennlp-brat-annotator` as well as the
+components listed above. Some entries are aggregators themselves: for example,
+[opennlp-grpc/pom.xml](opennlp-grpc/pom.xml) builds `opennlp-grpc-api` and
+`opennlp-grpc-service`; its `examples` directory is not a Maven reactor module.
+The [gRPC README](opennlp-grpc/README.md) describes a proof of concept with
+separate service and model setup. Its older Java prerequisite should be read
+alongside the root POM's current JDK 21 requirement.
 
-```
-<dependency>
-    <groupId>org.apache.opennlp</groupId>
-    <artifactId>opennlp-sandbox</artifactId>
-    <version>${opennlp.version}</version>
-</dependency>
-```
-
-#### SBT
-
-```
-libraryDependencies += "org.apache.opennlp" % "opennlp-sandbox" % "${opennlp.version}"
-```
-
-#### Gradle
-
-```
-compile group: "org.apache.opennlp", name: "opennlp-sandbox", version: "${opennlp.version}"
-```
-
-For more details please check our [documentation](http://opennlp.apache.org/docs/)
+These components remain experimental and are not official ASF releases, as
+noted in the security disclaimer above. Core OpenNLP documentation and demo
+models do not establish that every sandbox component supports the same
+features, model formats, or runtime commands.
 
 ## Building OpenNLP
 

@@ -15,6 +15,81 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<!-- fork-homepage:start -->
+# OpenNLP Sandbox: explore experimental NLP components
+
+**A source workbench for NLP experiments, service adapters, corpus tooling, and optional integrations.** This public `hsoliwal` fork of [apache/opennlp-sandbox](https://github.com/apache/opennlp-sandbox) helps you pick a focused component and understand its inputs, dependencies, and operational limits before running it.
+
+**Experimental scope:** upstream explicitly states that this code is not intended for production, is not released as official Apache Software Foundation artifacts, and is outside this sandbox's CVE reporting support. The full upstream disclaimer is preserved below. A documented class or example is not a support or security guarantee.
+
+## Pick a starting point
+
+| Interest | Source | What to watch |
+| --- | --- | --- |
+| Serve tokenization, sentences, and POS over gRPC | [opennlp-grpc](opennlp-grpc) | Models, generated protocol bindings, listening ports, and transport security |
+| Link mentions of the same entity | [opennlp-coref](opennlp-coref) | Training and inference have different state/lifecycle needs |
+| Choose a word's meaning in context | [opennlp-wsd](opennlp-wsd) | Token indexes, dictionary/model selection, and sense IDs |
+| Generate a shorter text summary | [summarizer](summarizer) | Algorithm differences and task-quality evaluation |
+| Explore text similarity | [opennlp-similarity](opennlp-similarity/README.md) | Some utilities perform web, email, or search-service operations |
+| Store and serve corpora | [corpus-server](corpus-server) | Persistent writes, initialization, shutdown, and deletion |
+
+The root is a Maven `pom` aggregator, not a single runtime library. Choose the actual module artifact instead of copying a generic parent dependency example. The inspected tree has 21 POM projects; the [fork guide](FORK_GUIDE.md) also covers the separate Python client and cloud tooling. The fork's additions document inherited components and gaps; they do not supply an implemented M3 integration or a new production service.
+
+## Concepts before the first command
+
+- **Coreference:** grouping mentions that refer to the same entity, such as a name and a later pronoun.
+- **Word-sense disambiguation:** selecting which dictionary meaning fits a word in context.
+- **Corpus:** a collection of text or annotations; corpus-server operations can change stored data.
+- **gRPC / protobuf:** a remote-call protocol and schema-defined messages. [opennlp.proto](opennlp-grpc/opennlp-grpc-api/opennlp.proto) is the source of truth for service names and request fields.
+- **Model discovery:** asking the service which models are available, then selecting an appropriate returned identifier rather than assuming a sample hash exists.
+- **Reactor selection:** `-pl` selects a Maven project and `-am` includes its local prerequisites.
+
+## Quick start: build a focused service slice
+
+The root requires JDK 21+ and Maven 3.3.9+; individual modules can add requirements. Older nested examples may mention a different Java version. First check the runtime Maven actually uses.
+
+```sh
+git clone https://github.com/hsoliwal/opennlp-sandbox.git
+cd opennlp-sandbox
+git rev-parse HEAD
+java -version
+mvn -version
+mvn -pl opennlp-grpc/opennlp-grpc-service -am verify
+```
+
+This selects the service and prerequisites and reaches its configured integration-test lifecycle. It needs dependencies/model resources and does not verify every sandbox component. No build, test, download, or service launch was executed for this homepage update.
+
+## Worked example: inspect server help before deployment
+
+After the selected build succeeds, use the executable produced by the service module:
+
+```sh
+java -jar opennlp-grpc/opennlp-grpc-service/target/opennlp-grpc-server-3.0.0-SNAPSHOT.jar --help
+```
+
+The inspected server supports `-p/--port` and `-c/--config`, plus standard help/version options. `-h` is help, not a host-binding option. Prefer those declarations to older version/path examples in nested documentation. The [fork guide](FORK_GUIDE.md) explains the schema, three services, model lookup, and Python examples.
+
+The inspected server construction does not configure TLS or authentication. Use isolated, non-sensitive experiments and assess exposure before starting a listener. Running help does not demonstrate a successful request, validate a model, or establish deployment security.
+
+## Compact command cheat sheet
+
+| Goal | Command / next step |
+| --- | --- |
+| Run focused utility tests | `mvn -pl nlp-utils -am test` |
+| Run focused service unit lifecycle | `mvn -pl opennlp-grpc/opennlp-grpc-service -am test` |
+| Reach focused service verification | `mvn -pl opennlp-grpc/opennlp-grpc-service -am verify` |
+| Verify the similarity slice | `mvn -pl opennlp-similarity -am verify` |
+| Review a pending patch | `git diff --check` |
+| Trace API/package responsibilities | [Package inventory](PACKAGE_INVENTORY.md) |
+
+The service's ordinary unit-test selection excludes `*IT.java`; `test` and `verify` therefore answer different questions. Do not run corpus deletion/import commands or the cloud evaluation scripts merely to explore the documentation: those can have persistent effects or costs.
+
+**Continue reading:** [component contracts and troubleshooting context](FORK_GUIDE.md) · [package evidence and gaps](PACKAGE_INVENTORY.md) · [Python example instructions](opennlp-grpc/examples/python-client/README.md) · [contribution guide](.github/CONTRIBUTING.md) · [license](LICENSE) and [notices](NOTICE).
+
+## Preserved upstream project documentation
+
+<!-- fork-homepage:end -->
+
 Welcome to Apache OpenNLP!
 ===========
 

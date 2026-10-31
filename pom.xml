@@ -140,7 +140,7 @@
 
         <uimaj.version>3.6.1</uimaj.version>
 
-        <jackson.version>2.22.3</jackson.version>
+        <jackson.version>2.22.4</jackson.version>
         <jackson.annotations.version>2.21</jackson.annotations.version>
         <jersey-client.version>2.41</jersey-client.version>
         <jersey-server.version>2.47</jersey-server.version>
@@ -150,7 +150,7 @@
 
         <coveralls.maven.plugin>4.3.0</coveralls.maven.plugin>
         <jacoco.maven.plugin>0.8.15</jacoco.maven.plugin>
-        <maven.failsafe.plugin>3.6.0</maven.failsafe.plugin>
+        <maven.failsafe.plugin>3.6.1</maven.failsafe.plugin>
         <forbiddenapis.plugin>3.11</forbiddenapis.plugin>
         <mockito.version>3.9.0</mockito.version>
 

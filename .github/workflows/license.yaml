@@ -57,6 +57,9 @@ jobs:
           cat src/license/NOTICE.template target/DEPENDENCY-LICENSES > NOTICE
 
       - name: Create Pull Request after License Regeneration
+        # Upstream only: this fork does not let GITHUB_TOKEN open pull requests. The fork
+        # still runs the license generation and check above; it only skips the PR.
+        if: github.repository == 'apache/opennlp-sandbox'
         uses: peter-evans/create-pull-request@v8
         with:
           base: main

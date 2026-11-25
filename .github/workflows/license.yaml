@@ -56,7 +56,20 @@ jobs:
         run: |
           cat src/license/NOTICE.template target/DEPENDENCY-LICENSES > NOTICE
 
+      - name: Report NOTICE drift (fork only)
+        # The next step is upstream only, so in this fork nothing commits or pushes the
+        # regenerated NOTICE. Keep drift visible as a warning; it does not fail the job.
+        if: github.repository != 'apache/opennlp-sandbox'
+        run: |
+          git diff --stat --exit-code -- NOTICE \
+            || echo "::warning file=NOTICE::NOTICE on this commit differs from the regenerated NOTICE"
+
       - name: Create Pull Request after License Regeneration
+        # Upstream only. When NOTICE changed, this action commits it, force-pushes branch
+        # regenerate_license_file_after_dep_upgrade and opens a PR. This fork does not let
+        # GITHUB_TOKEN open pull requests, so the last call failed after the push. Skipping
+        # the step here also skips that commit and push; the warning above reports drift.
+        if: github.repository == 'apache/opennlp-sandbox'
         uses: peter-evans/create-pull-request@v8
         with:
           base: main
